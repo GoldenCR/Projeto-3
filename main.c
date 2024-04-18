@@ -45,6 +45,35 @@ void mostrarUsuarios(struct Usuario *lista, int numUsuarios) {
     }
 }
 
+
+void deletarUsuarios(struct Usuario **lista, int *numUsuarios) {
+    char telefone[20];
+    printf("Digite o número de telefone do usuário que deseja deletar: ");
+    scanf("%s", telefone);
+    int encontrado = 0;
+    for (int i = 0; i < *numUsuarios; i++) {
+        if (strcmp((*lista)[i].telefone, telefone) == 0) {
+            for (int j = i; j < *numUsuarios - 1; j++) {
+                (*lista)[j] = (*lista)[j + 1];
+            }
+            (*numUsuarios)--;
+            encontrado = 1;
+            printf("Usuário deletado com sucesso.\n");
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Usuário não encontrado.\n");
+    }
+
+    *lista = realloc(*lista, (*numUsuarios) * sizeof(struct Usuario));
+    if (*numUsuarios > 0 && *lista == NULL) {
+        printf("Erro ao alocar memória.\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 int main() {
     struct Usuario *listaUsuarios = NULL;
     int numUsuarios = 0;
@@ -65,7 +94,7 @@ int main() {
                 mostrarUsuarios(listaUsuarios, numUsuarios);
                 break;
             case 3:
-                deletarUsuario(&listaUsuarios, &numUsuarios);
+                deletarUsuarios(&listaUsuarios, &numUsuarios);
                 break;
             case 4:
                 printf("Encerrando o programa.\n");
